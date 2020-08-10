@@ -1,0 +1,6 @@
+/front/dist/
+/front/node_modules
+/server/target/
+.idea/
+
+package-lock.json
