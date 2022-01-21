@@ -78,7 +78,7 @@ public class FromEntityProcessor extends AbstractProcessor {
                     before(jcClass);
 
                     if (!ProcessUtil.hasFromEntityConstructor(fieldJCVariables, pkg, jcClass)) {
-                        JCTree.JCMethodDecl method = createToEntityConstructor(element, mappings, map.get(pkg));
+                        JCTree.JCMethodDecl method = fromEntityConstructor(element, mappings, map.get(pkg));
                         jcClass.defs = jcClass.defs.append(method);
                     }
 
@@ -140,7 +140,7 @@ public class FromEntityProcessor extends AbstractProcessor {
         }
     }
 
-    private JCTree.JCMethodDecl createToEntityConstructor(Element element, String mappings, Element param) {
+    private JCTree.JCMethodDecl fromEntityConstructor(Element element, String mappings, Element param) {
         ListBuffer<JCTree.JCVariableDecl> jcVariables = new ListBuffer<>();
         jcVariables.append(
                 treeMaker.Param(names.fromString("entity"), (Type) param.asType(), null));
