@@ -124,9 +124,9 @@ public class FromEntityProcessor extends AbstractProcessor {
             }
             java.util.List<JCTree> trees = new ArrayList<>();
             trees.addAll(jccu.defs);
-            JCTree.JCIdent ident = treeMaker.Ident(names.fromString("com.joker.entity"));
+            JCTree.JCIdent ident = treeMaker.Ident(names.fromString(pkg));
             JCTree.JCImport jcImport = treeMaker.Import(treeMaker.Select(
-                    ident, names.fromString("PersonEntity")), false);
+                    ident, names.fromString(clz)), false);
             idx = 0;
             for (JCTree tree: trees) {
                 if (tree instanceof JCTree.JCPackageDecl) {
