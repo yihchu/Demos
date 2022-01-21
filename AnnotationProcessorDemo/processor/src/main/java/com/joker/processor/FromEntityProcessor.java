@@ -32,9 +32,10 @@ import java.util.stream.Collectors;
  * 参考：
  * https://plugins.jetbrains.com/docs/intellij/syntax-highlighting-and-error-highlighting.html
  * https://blog.mythsman.com/post/5d2c11c767f841464434a3bf/
+ * https://liuyehcf.github.io/2018/02/02/Java-JSR-269-%E6%8F%92%E5%85%A5%E5%BC%8F%E6%B3%A8%E8%A7%A3%E5%A4%84%E7%90%86%E5%99%A8/
  */
 @SupportedAnnotationTypes({"com.joker.annotation.FromEntity"})
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_11)
 @AutoService(Processor.class)
 public class FromEntityProcessor extends AbstractProcessor {
     private Messager messager;
@@ -65,11 +66,9 @@ public class FromEntityProcessor extends AbstractProcessor {
             FromEntity fromEntity = element.getAnnotation(FromEntity.class);
             String mappings = fromEntity.mappings();
             String pkg = fromEntity.clazz();
-
             if (element.getKind() == ElementKind.CLASS) {
                 addImportInfo(element, pkg);
             }
-
             JCTree jcTree = trees.getTree(element);
             jcTree.accept(new TreeTranslator() {
                 @Override
@@ -108,7 +107,6 @@ public class FromEntityProcessor extends AbstractProcessor {
         Tree leaf = treePath.getLeaf();
         if (treePath.getCompilationUnit() instanceof JCTree.JCCompilationUnit && leaf instanceof JCTree) {
             JCTree.JCCompilationUnit jccu = (JCTree.JCCompilationUnit) treePath.getCompilationUnit();
-            // 这里应该是检查是不是已经导入了
             for (JCTree jcTree : jccu.getImports()) {
                 if (jcTree != null && jcTree instanceof JCTree.JCImport) {
                     JCTree.JCImport jcImport = (JCTree.JCImport) jcTree;

@@ -29,7 +29,7 @@ import static com.joker.util.ProcessUtil.CONSTRUCTOR_NAME;
  * https://liuyehcf.github.io/2018/02/02/Java-JSR-269-%E6%8F%92%E5%85%A5%E5%BC%8F%E6%B3%A8%E8%A7%A3%E5%A4%84%E7%90%86%E5%99%A8/
  */
 @SupportedAnnotationTypes({"com.joker.annotation.Greet"})
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_11)
 @AutoService(Processor.class)
 public class GreetProcessor extends AbstractProcessor {
 
@@ -84,8 +84,6 @@ public class GreetProcessor extends AbstractProcessor {
         return true;
     }
 
-
-
     private JCTree.JCMethodDecl makeGetterMethodDecl(JCTree.JCVariableDecl jcVariableDecl) {
         ListBuffer<JCTree.JCStatement> statements = new ListBuffer<>();
         statements.append(treeMaker.Return(treeMaker.Select(treeMaker.Ident(names.fromString("this")), jcVariableDecl.getName())));
@@ -110,12 +108,11 @@ public class GreetProcessor extends AbstractProcessor {
 
         ListBuffer<JCTree.JCStatement> jcStatements = new ListBuffer<>();
         for (JCTree.JCVariableDecl jcVariable : fieldJCVariables) {
-            //添加构造方法的赋值语句 " this.xxx = xxx; "
             jcStatements.append(
                     treeMaker.Exec(
                             treeMaker.Assign(
                                     treeMaker.Select(
-                                            treeMaker.Ident(names.fromString("this")),
+                                            treeMaker.Ident(names.fromString(ProcessUtil.THIS)),
                                             names.fromString(jcVariable.name.toString())
                                     ),
                                     treeMaker.Ident(names.fromString(jcVariable.name.toString()))
@@ -125,7 +122,7 @@ public class GreetProcessor extends AbstractProcessor {
         }
         JCTree.JCBlock jcBlock = treeMaker.Block(
                 0 //访问标志
-                , jcStatements.toList() //所有的语句
+                , List.nil() //所有的语句
         );
         return treeMaker.MethodDef(
                 treeMaker.Modifiers(Flags.PUBLIC), //访问标志
